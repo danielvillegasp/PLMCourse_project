@@ -1,0 +1,116 @@
+---
+title: "Course Project Machine Learning"
+author: "Daniel Villegas"
+date: "January 20, 2016"
+output: html_document
+---
+
+# Loading the data
+```{r}
+library(ggplot2)
+library(GGally)
+library(caret)
+library(dplyr)
+
+
+wldf <- read.csv('./pml-training.csv',
+                 na.strings = c("", "#DIV/0!", "NA"))
+
+wldf_test <- read.csv('./pml-testing.csv',
+                 na.strings = c("", "#DIV/0!", "NA"))
+
+
+```
+
+# Feature selection
+
+Originaly, the dataset has 152 predictors, 1 outcome and 7 time related variables such as num_window and 
+timestamps. First of all, the time related variables are going to be dropped because the target is to 
+predict to which classe a specific observation belongs rather than the classe of a group of a group of 
+observations inside a time window.
+
+There are about groups of variables within predictors, those are: raw data, such as 
+acceleration on each axis, gyros data and magnetometer data; geometric data such as the euler angles
+which appear to be derived from the raw data and statistical data for each window. Statistical data of 
+observations belonging to a window should be dropped due to the same reason time related variables were.
+Geometric variables, were calculated by the team that collected the data [reference], then, since raw and
+geometric variables contain the same information, raw variables are dropped and the predictions will be 
+performed using only geometric variables.
+
+```{r}
+na_ts <- colSums(is.na(wldf_test)) < nrow(wldf_test)
+wldf <- wldf[,na_ts] %>% select(-contains('timestamp'), -contains('window'), -user_name, -X, -contains('gyros'), -contains('magnet'), -starts_with('accel'), contains('total_accel'))
+
+wldf_test <- wldf_test[,na_ts] %>% select(-contains('timestamp'), -contains('window'), -user_name, -X, -contains('gyros'), -contains('magnet'), -starts_with('accel'), contains('total_accel'))
+```
+
+# Model
+
+To perform the predictions, a random forest and a gbm (gradient boosted random forest) are going to be
+combined with a logistic boosted classifier to get better predictions. Rather than using the predicted
+outcome of the random forest and the gbm to train the logistic classifier, the probabilities for each 
+classe are used. The idea is that the logistic classifier is feeded with a measure of how "sure" each 
+model is for each classe rather than the predicted classe for each method.
+
+```{r}
+inValidation <- createDataPartition(wldf$classe, p = 0.4,list=F)
+validation <- wldf[inValidation,]
+training <- wldf[-inValidation,]
+inTrain <- createDataPartition(training$classe, p = 0.6,list=F)
+testing <- training[-inTrain,]
+training <- training[inTrain,]
+trControl <- trainControl(method = "cv", number = 4)
+modelRF <- train(classe ~., data = training, method='rf', trControl = trControl)
+modelGB <- train(classe ~., data=training, method='gbm', trControl = trControl, verbose=F)
+
+test.df <- cbind(predict(modelRF, testing, type="prob"), 
+                 predict(modelGB, testing, type="prob"))
+colnames(test.df) <- as.character(1:ncol(test.df))
+test.df$classe <- testing$classe
+
+modelLB <- train(classe ~., test.df, method="LogitBoost")
+
+
+
+```
+
+# Results
+
+The confussion matrices for each model are shown below, it can be seen that the ensemble model 
+outperforms both, the random forest and the gbm with a 98% accuracy in the validation set and a 99% 
+accuracy in the testing set (which was used to train the ensemble model).
+
+```{r}
+confusionMatrix(training$classe, predict(modelRF, training))
+confusionMatrix(testing$classe, predict(modelRF, testing))
+
+confusionMatrix(training$classe, predict(modelGB, training))
+confusionMatrix(testing$classe, predict(modelGB, testing))
+
+confusionMatrix(test.df$classe, predict(modelLB, test.df))
+val.df <- cbind(predict(modelRF, validation, type="prob"), 
+                predict(modelGB, validation, type="prob"))
+colnames(val.df) <- as.character(1:ncol(val.df))
+val.df$classe <- validation$classe
+confusionMatrix(validation$classe, predict(modelLB, val.df))
+```
+
+# Out of sample error
+
+The out of sample error can be estimated from the confusion matrix of the validation set. The resulting
+out of sample error estimation is:
+```{r}
+paste(c(round(100- confusionMatrix(validation$classe, predict(modelLB, val.df))$overall[[1]]*100,
+              digits = 3), '%'), 
+        collapse =" ")
+```
+
+# Quiz results
+
+```{r}
+fit.df <- cbind(predict(modelRF, wldf_test, type="prob"), 
+                predict(modelGB, wldf_test, type="prob"))
+colnames(fit.df) <- as.character(1:ncol(fit.df))
+fit.df$classe <- wldf_test$classe
+predict(modelLB, fit.df)
+```
