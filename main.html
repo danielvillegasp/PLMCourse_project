@@ -110,7 +110,7 @@ wldf_test &lt;- wldf_test[,na_ts] %&gt;% select(-contains('timestamp'), -contain
 <pre class="r"><code>inValidation &lt;- createDataPartition(wldf$classe, p = 0.4,list=F)
 validation &lt;- wldf[inValidation,]
 training &lt;- wldf[-inValidation,]
-inTrain &lt;- createDataPartition(training$classe, p = 0.6,list=F)
+inTrain &lt;- createDataPartition(training$classe, p = 0.7,list=F)
 testing &lt;- training[-inTrain,]
 training &lt;- training[inTrain,]
 trControl &lt;- trainControl(method = &quot;cv&quot;, number = 4)
@@ -165,16 +165,16 @@ modelLB &lt;- train(classe ~., test.df, method=&quot;LogitBoost&quot;)</code></p
 ## 
 ##           Reference
 ## Prediction    A    B    C    D    E
-##          A 2009    0    0    0    0
-##          B    0 1367    0    0    0
-##          C    0    0 1232    0    0
-##          D    0    0    0 1158    0
-##          E    0    0    0    0 1299
+##          A 2344    0    0    0    0
+##          B    0 1595    0    0    0
+##          C    0    0 1438    0    0
+##          D    0    0    0 1351    0
+##          E    0    0    0    0 1515
 ## 
 ## Overall Statistics
 ##                                      
 ##                Accuracy : 1          
-##                  95% CI : (0.9995, 1)
+##                  95% CI : (0.9996, 1)
 ##     No Information Rate : 0.2844     
 ##     P-Value [Acc &gt; NIR] : &lt; 2.2e-16  
 ##                                      
@@ -188,138 +188,138 @@ modelLB &lt;- train(classe ~., test.df, method=&quot;LogitBoost&quot;)</code></p
 ## Specificity            1.0000   1.0000   1.0000   1.0000   1.0000
 ## Pos Pred Value         1.0000   1.0000   1.0000   1.0000   1.0000
 ## Neg Pred Value         1.0000   1.0000   1.0000   1.0000   1.0000
-## Prevalence             0.2844   0.1935   0.1744   0.1639   0.1839
-## Detection Rate         0.2844   0.1935   0.1744   0.1639   0.1839
-## Detection Prevalence   0.2844   0.1935   0.1744   0.1639   0.1839
+## Prevalence             0.2844   0.1935   0.1745   0.1639   0.1838
+## Detection Rate         0.2844   0.1935   0.1745   0.1639   0.1838
+## Detection Prevalence   0.2844   0.1935   0.1745   0.1639   0.1838
 ## Balanced Accuracy      1.0000   1.0000   1.0000   1.0000   1.0000</code></pre>
 <pre class="r"><code>confusionMatrix(testing$classe, predict(modelRF, testing))</code></pre>
 <pre><code>## Confusion Matrix and Statistics
 ## 
 ##           Reference
-## Prediction    A    B    C    D    E
-##          A 1329    7    3    0    0
-##          B   18  876   14    3    0
-##          C    0   12  795   13    1
-##          D    0    0   17  752    2
-##          E    2    4    2    8  849
+## Prediction   A   B   C   D   E
+##          A 999   3   0   2   0
+##          B   9 662  11   0   1
+##          C   0   5 605   5   0
+##          D   1   3  11 563   0
+##          E   0   4   3   2 640
 ## 
 ## Overall Statistics
-##                                           
-##                Accuracy : 0.9775          
-##                  95% CI : (0.9728, 0.9815)
-##     No Information Rate : 0.2866          
-##     P-Value [Acc &gt; NIR] : &lt; 2.2e-16       
-##                                           
-##                   Kappa : 0.9715          
-##  Mcnemar's Test P-Value : NA              
+##                                          
+##                Accuracy : 0.983          
+##                  95% CI : (0.9782, 0.987)
+##     No Information Rate : 0.2859         
+##     P-Value [Acc &gt; NIR] : &lt; 2.2e-16      
+##                                          
+##                   Kappa : 0.9785         
+##  Mcnemar's Test P-Value : NA             
 ## 
 ## Statistics by Class:
 ## 
 ##                      Class: A Class: B Class: C Class: D Class: E
-## Sensitivity            0.9852   0.9744   0.9567   0.9691   0.9965
-## Specificity            0.9970   0.9908   0.9933   0.9952   0.9958
-## Pos Pred Value         0.9925   0.9616   0.9683   0.9754   0.9815
-## Neg Pred Value         0.9941   0.9939   0.9907   0.9939   0.9992
-## Prevalence             0.2866   0.1910   0.1765   0.1649   0.1810
-## Detection Rate         0.2823   0.1861   0.1689   0.1598   0.1804
-## Detection Prevalence   0.2845   0.1935   0.1744   0.1638   0.1838
-## Balanced Accuracy      0.9911   0.9826   0.9750   0.9821   0.9962</code></pre>
+## Sensitivity            0.9901   0.9778   0.9603   0.9843   0.9984
+## Specificity            0.9980   0.9926   0.9966   0.9949   0.9969
+## Pos Pred Value         0.9950   0.9693   0.9837   0.9740   0.9861
+## Neg Pred Value         0.9960   0.9947   0.9914   0.9970   0.9997
+## Prevalence             0.2859   0.1918   0.1785   0.1621   0.1816
+## Detection Rate         0.2831   0.1876   0.1714   0.1595   0.1814
+## Detection Prevalence   0.2845   0.1935   0.1743   0.1638   0.1839
+## Balanced Accuracy      0.9941   0.9852   0.9784   0.9896   0.9977</code></pre>
 <pre class="r"><code>confusionMatrix(training$classe, predict(modelGB, training))</code></pre>
 <pre><code>## Confusion Matrix and Statistics
 ## 
 ##           Reference
 ## Prediction    A    B    C    D    E
-##          A 1966   26    6    6    5
-##          B   43 1254   55   10    5
-##          C    0   42 1168   18    4
-##          D    5    6   23 1120    4
-##          E    2   17   18   21 1241
+##          A 2279   39   13    9    4
+##          B   46 1473   64    6    6
+##          C    3   56 1357   22    0
+##          D    4    7   20 1316    4
+##          E    4   20   14   22 1455
 ## 
 ## Overall Statistics
-##                                         
-##                Accuracy : 0.9553        
-##                  95% CI : (0.9502, 0.96)
-##     No Information Rate : 0.2854        
-##     P-Value [Acc &gt; NIR] : &lt; 2.2e-16     
-##                                         
-##                   Kappa : 0.9434        
-##  Mcnemar's Test P-Value : 7.712e-06     
+##                                           
+##                Accuracy : 0.956           
+##                  95% CI : (0.9513, 0.9603)
+##     No Information Rate : 0.2834          
+##     P-Value [Acc &gt; NIR] : &lt; 2.2e-16       
+##                                           
+##                   Kappa : 0.9443          
+##  Mcnemar's Test P-Value : 4.123e-06       
 ## 
 ## Statistics by Class:
 ## 
 ##                      Class: A Class: B Class: C Class: D Class: E
-## Sensitivity            0.9752   0.9323   0.9197   0.9532   0.9857
-## Specificity            0.9915   0.9802   0.9890   0.9935   0.9900
-## Pos Pred Value         0.9786   0.9173   0.9481   0.9672   0.9554
-## Neg Pred Value         0.9901   0.9840   0.9825   0.9907   0.9969
-## Prevalence             0.2854   0.1904   0.1798   0.1663   0.1782
-## Detection Rate         0.2783   0.1775   0.1653   0.1585   0.1757
-## Detection Prevalence   0.2844   0.1935   0.1744   0.1639   0.1839
-## Balanced Accuracy      0.9833   0.9563   0.9543   0.9734   0.9879</code></pre>
+## Sensitivity            0.9756   0.9235   0.9244   0.9571   0.9905
+## Specificity            0.9890   0.9816   0.9880   0.9949   0.9911
+## Pos Pred Value         0.9723   0.9235   0.9437   0.9741   0.9604
+## Neg Pred Value         0.9903   0.9816   0.9837   0.9914   0.9979
+## Prevalence             0.2834   0.1935   0.1781   0.1668   0.1782
+## Detection Rate         0.2765   0.1787   0.1646   0.1597   0.1765
+## Detection Prevalence   0.2844   0.1935   0.1745   0.1639   0.1838
+## Balanced Accuracy      0.9823   0.9526   0.9562   0.9760   0.9908</code></pre>
 <pre class="r"><code>confusionMatrix(testing$classe, predict(modelGB, testing))</code></pre>
 <pre><code>## Confusion Matrix and Statistics
 ## 
 ##           Reference
-## Prediction    A    B    C    D    E
-##          A 1302   22    9    5    1
-##          B   39  804   46   16    6
-##          C    1   37  760   18    5
-##          D    4    4   18  741    4
-##          E    8   19   14   20  804
+## Prediction   A   B   C   D   E
+##          A 961  23   8   4   8
+##          B  36 603  33  10   1
+##          C   1  33 570  11   0
+##          D   5   4  22 543   4
+##          E   4  11  19  12 603
 ## 
 ## Overall Statistics
 ##                                           
-##                Accuracy : 0.9371          
-##                  95% CI : (0.9298, 0.9439)
-##     No Information Rate : 0.2877          
+##                Accuracy : 0.9294          
+##                  95% CI : (0.9205, 0.9377)
+##     No Information Rate : 0.2853          
 ##     P-Value [Acc &gt; NIR] : &lt; 2.2e-16       
 ##                                           
-##                   Kappa : 0.9204          
-##  Mcnemar's Test P-Value : 1.136e-06       
+##                   Kappa : 0.9108          
+##  Mcnemar's Test P-Value : 8.241e-07       
 ## 
 ## Statistics by Class:
 ## 
 ##                      Class: A Class: B Class: C Class: D Class: E
-## Sensitivity            0.9616   0.9074   0.8973   0.9263   0.9805
-## Specificity            0.9890   0.9720   0.9842   0.9923   0.9843
-## Pos Pred Value         0.9724   0.8825   0.9257   0.9611   0.9295
-## Neg Pred Value         0.9846   0.9784   0.9776   0.9850   0.9958
-## Prevalence             0.2877   0.1882   0.1799   0.1700   0.1742
-## Detection Rate         0.2766   0.1708   0.1615   0.1574   0.1708
-## Detection Prevalence   0.2845   0.1935   0.1744   0.1638   0.1838
-## Balanced Accuracy      0.9753   0.9397   0.9407   0.9593   0.9824</code></pre>
+## Sensitivity            0.9543   0.8947   0.8742   0.9362   0.9789
+## Specificity            0.9830   0.9720   0.9844   0.9881   0.9842
+## Pos Pred Value         0.9572   0.8829   0.9268   0.9394   0.9291
+## Neg Pred Value         0.9818   0.9751   0.9719   0.9875   0.9955
+## Prevalence             0.2853   0.1910   0.1848   0.1644   0.1746
+## Detection Rate         0.2723   0.1709   0.1615   0.1539   0.1709
+## Detection Prevalence   0.2845   0.1935   0.1743   0.1638   0.1839
+## Balanced Accuracy      0.9686   0.9333   0.9293   0.9622   0.9816</code></pre>
 <pre class="r"><code>confusionMatrix(test.df$classe, predict(modelLB, test.df))</code></pre>
 <pre><code>## Confusion Matrix and Statistics
 ## 
 ##           Reference
 ## Prediction    A    B    C    D    E
-##          A 1329    5    0    0    0
-##          B    6  891    6    0    0
-##          C    0    6  794   10    0
-##          D    0    0    6  758    1
-##          E    0    0    0    0  864
+##          A 1003    0    0    0    0
+##          B    2  671    7    0    1
+##          C    0    3  601    4    0
+##          D    0    1    2  570    0
+##          E    0    0    0    0  649
 ## 
 ## Overall Statistics
 ##                                           
-##                Accuracy : 0.9914          
-##                  95% CI : (0.9884, 0.9939)
-##     No Information Rate : 0.2855          
+##                Accuracy : 0.9943          
+##                  95% CI : (0.9912, 0.9965)
+##     No Information Rate : 0.286           
 ##     P-Value [Acc &gt; NIR] : &lt; 2.2e-16       
 ##                                           
-##                   Kappa : 0.9892          
+##                   Kappa : 0.9928          
 ##  Mcnemar's Test P-Value : NA              
 ## 
 ## Statistics by Class:
 ## 
 ##                      Class: A Class: B Class: C Class: D Class: E
-## Sensitivity            0.9955   0.9878   0.9851   0.9870   0.9988
-## Specificity            0.9985   0.9968   0.9959   0.9982   1.0000
-## Pos Pred Value         0.9963   0.9867   0.9802   0.9908   1.0000
-## Neg Pred Value         0.9982   0.9971   0.9969   0.9974   0.9997
-## Prevalence             0.2855   0.1929   0.1724   0.1642   0.1850
-## Detection Rate         0.2842   0.1905   0.1698   0.1621   0.1848
-## Detection Prevalence   0.2853   0.1931   0.1732   0.1636   0.1848
-## Balanced Accuracy      0.9970   0.9923   0.9905   0.9926   0.9994</code></pre>
+## Sensitivity            0.9980   0.9941   0.9852   0.9930   0.9985
+## Specificity            1.0000   0.9965   0.9976   0.9990   1.0000
+## Pos Pred Value         1.0000   0.9853   0.9885   0.9948   1.0000
+## Neg Pred Value         0.9992   0.9986   0.9969   0.9986   0.9997
+## Prevalence             0.2860   0.1921   0.1736   0.1633   0.1850
+## Detection Rate         0.2854   0.1910   0.1710   0.1622   0.1847
+## Detection Prevalence   0.2854   0.1938   0.1730   0.1631   0.1847
+## Balanced Accuracy      0.9990   0.9953   0.9914   0.9960   0.9992</code></pre>
 <pre class="r"><code>val.df &lt;- cbind(predict(modelRF, validation, type=&quot;prob&quot;), 
                 predict(modelGB, validation, type=&quot;prob&quot;))
 colnames(val.df) &lt;- as.character(1:ncol(val.df))
@@ -329,33 +329,33 @@ confusionMatrix(validation$classe, predict(modelLB, val.df))</code></pre>
 ## 
 ##           Reference
 ## Prediction    A    B    C    D    E
-##          A 2201   12    4    1    0
-##          B   20 1464   21    1    2
-##          C    2   18 1302   31    2
-##          D    0    6   15 1257    1
-##          E    0    2    5    1 1430
+##          A 2209   12    1    1    1
+##          B   12 1478    8    1    2
+##          C    0   24 1302   22    1
+##          D    1    0   10 1262    5
+##          E    0    2    3    5 1426
 ## 
 ## Overall Statistics
 ##                                           
-##                Accuracy : 0.9815          
-##                  95% CI : (0.9783, 0.9844)
-##     No Information Rate : 0.2851          
-##     P-Value [Acc &gt; NIR] : &lt; 2.2e-16       
+##                Accuracy : 0.9857          
+##                  95% CI : (0.9829, 0.9883)
+##     No Information Rate : 0.2853          
+##     P-Value [Acc &gt; NIR] : &lt; 2e-16         
 ##                                           
-##                   Kappa : 0.9766          
-##  Mcnemar's Test P-Value : NA              
+##                   Kappa : 0.982           
+##  Mcnemar's Test P-Value : 0.08619         
 ## 
 ## Statistics by Class:
 ## 
 ##                      Class: A Class: B Class: C Class: D Class: E
-## Sensitivity            0.9901   0.9747   0.9666   0.9737   0.9965
-## Specificity            0.9970   0.9930   0.9918   0.9966   0.9987
-## Pos Pred Value         0.9923   0.9708   0.9609   0.9828   0.9944
-## Neg Pred Value         0.9961   0.9940   0.9930   0.9948   0.9992
-## Prevalence             0.2851   0.1926   0.1727   0.1656   0.1840
-## Detection Rate         0.2823   0.1877   0.1670   0.1612   0.1834
-## Detection Prevalence   0.2844   0.1934   0.1738   0.1640   0.1844
-## Balanced Accuracy      0.9935   0.9839   0.9792   0.9851   0.9976</code></pre>
+## Sensitivity            0.9941   0.9749   0.9834   0.9775   0.9937
+## Specificity            0.9973   0.9963   0.9927   0.9975   0.9984
+## Pos Pred Value         0.9933   0.9847   0.9652   0.9875   0.9930
+## Neg Pred Value         0.9977   0.9940   0.9966   0.9955   0.9986
+## Prevalence             0.2853   0.1947   0.1700   0.1658   0.1843
+## Detection Rate         0.2836   0.1898   0.1672   0.1620   0.1831
+## Detection Prevalence   0.2856   0.1927   0.1732   0.1641   0.1844
+## Balanced Accuracy      0.9957   0.9856   0.9881   0.9875   0.9961</code></pre>
 </div>
 <div id="out-of-sample-error" class="section level1">
 <h1>Out of sample error</h1>
@@ -363,7 +363,7 @@ confusionMatrix(validation$classe, predict(modelLB, val.df))</code></pre>
 <pre class="r"><code>paste(c(round(100- confusionMatrix(validation$classe, predict(modelLB, val.df))$overall[[1]]*100,
               digits = 3), '%'), 
         collapse =&quot; &quot;)</code></pre>
-<pre><code>## [1] &quot;1.847 %&quot;</code></pre>
+<pre><code>## [1] &quot;1.425 %&quot;</code></pre>
 </div>
 <div id="quiz-results" class="section level1">
 <h1>Quiz results</h1>
@@ -372,8 +372,7 @@ confusionMatrix(validation$classe, predict(modelLB, val.df))</code></pre>
 colnames(fit.df) &lt;- as.character(1:ncol(fit.df))
 fit.df$classe &lt;- wldf_test$classe
 predict(modelLB, fit.df)</code></pre>
-<pre><code>##  [1] B    A    B    A    A    E    D    &lt;NA&gt; A    A    B    C    B    A   
-## [15] E    E    A    B    B    B   
+<pre><code>##  [1] B A B A A E D B A A B C B A E E A B B B
 ## Levels: A B C D E</code></pre>
 </div>
 
