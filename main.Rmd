@@ -1,7 +1,7 @@
 ---
 title: "Course Project Machine Learning"
 author: "Daniel Villegas"
-date: "January 20, 2016"
+date: "January 30, 2016"
 output: html_document
 ---
 
@@ -33,7 +33,7 @@ There are about groups of variables within predictors, those are: raw data, such
 acceleration on each axis, gyros data and magnetometer data; geometric data such as the euler angles
 which appear to be derived from the raw data and statistical data for each window. Statistical data of 
 observations belonging to a window should be dropped due to the same reason time related variables were.
-Geometric variables, were calculated by the team that collected the data [reference], then, since raw and
+Geometric variables, were calculated by the team that collected the data [link](http://groupware.les.inf.puc-rio.br/public/papers/2013.Velloso.QAR-WLE.pdf), then, since raw and
 geometric variables contain the same information, raw variables are dropped and the predictions will be 
 performed using only geometric variables.
 
@@ -53,13 +53,13 @@ classe are used. The idea is that the logistic classifier is feeded with a measu
 model is for each classe rather than the predicted classe for each method.
 
 ```{r}
-inValidation <- createDataPartition(wldf$classe, p = 0.4,list=F)
+inValidation <- createDataPartition(wldf$classe, p = 0.3,list=F)
 validation <- wldf[inValidation,]
 training <- wldf[-inValidation,]
-inTrain <- createDataPartition(training$classe, p = 0.6,list=F)
+inTrain <- createDataPartition(training$classe, p = 0.7,list=F)
 testing <- training[-inTrain,]
 training <- training[inTrain,]
-trControl <- trainControl(method = "cv", number = 4)
+trControl <- trainControl(method = "cv", number = 10)
 modelRF <- train(classe ~., data = training, method='rf', trControl = trControl)
 modelGB <- train(classe ~., data=training, method='gbm', trControl = trControl, verbose=F)
 
